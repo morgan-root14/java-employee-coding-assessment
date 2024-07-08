@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.example'
@@ -15,7 +16,6 @@ repositories {
 dependencies {
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
-
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'javax.inject:javax.inject:1'
@@ -27,5 +27,51 @@ dependencies {
 }
 
 test {
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification // report is always generated after tests run
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+    dependsOn test
+    afterEvaluate {
+        getClassDirectories().setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/RqChallengeApplication**',
+                    '**/model/**',
+                    '**/config/**',
+                    '**/exception/**'
+            ])
+        }))
+    }// tests are required to run before generating the report
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacocoTestCoverageVerification {
+    afterEvaluate {
+        getClassDirectories().setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/RqChallengeApplication**',
+                    '**/model/**',
+                    '**/config/**',
+                    '**/exception/**'
+            ])
+        }))
+    }
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                minimum = 1.0
+            }
+        }
+    }
 }

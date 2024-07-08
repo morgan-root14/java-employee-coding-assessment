@@ -19,6 +19,7 @@ public class RqChallengeServiceImpl implements RqChallengeService {
 
     private final RqChallengeFeignClient rqChallengeFeignClient;
 
+
     @Override
     public List<Employee> getAllEmployees() {
         log.info("Retrieving list of all employees");
@@ -65,6 +66,17 @@ public class RqChallengeServiceImpl implements RqChallengeService {
     @Override
     public String deleteEmployeeById(String id) {
         log.info("Delete employee by id ::: {}", id);
-        return Objects.requireNonNull(rqChallengeFeignClient.deleteEmployeeById(id).getBody(), "Employee with id:" + id + "cannot be null").getStatus();
+        String employeeName;
+        try {
+            employeeName = Objects.requireNonNull(rqChallengeFeignClient.getEmployeeById(id).getBody(), "Employee data with id: " + id + "cannot be null").getData().getEmployee_name();
+            //Adding Sleep due to the dummy api having a limit to number of calls consecutively it can make.
+            log.info("Waiting 60 seconds before moving to next call due to api hit limit");
+            Thread.sleep(60000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        rqChallengeFeignClient.deleteEmployeeById(id);
+        log.info("Employee ({}) was successfully deleted from the system", employeeName);
+        return employeeName;
     }
 }

@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.net.HttpRetryException;
-
 @ControllerAdvice
 public class IEmployeeControllerAdvice {
 
@@ -18,18 +16,18 @@ public class IEmployeeControllerAdvice {
         return new ResponseEntity<>(ex.getMessage(), HttpStatusCode.valueOf(400));
     }
 
-    @ExceptionHandler(TooManyRequestsException.class)
-    public ResponseEntity<String> handleTooManyRequestsException(TooManyRequestsException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatusCode.valueOf(429));
-    }
-
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatusCode.valueOf(404));
     }
 
-    @ExceptionHandler(HttpRetryException.class)
-    public ResponseEntity<String> handleHttpRetryException(HttpRetryException ex) {
+    @ExceptionHandler(TooManyRequestsException.class)
+    public ResponseEntity<String> handleTooManyRequestsException(TooManyRequestsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatusCode.valueOf(429));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatusCode.valueOf(500));
     }
 }

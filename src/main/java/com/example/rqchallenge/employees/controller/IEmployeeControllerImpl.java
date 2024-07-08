@@ -2,8 +2,8 @@ package com.example.rqchallenge.employees.controller;
 
 import com.example.rqchallenge.employees.model.Employee;
 import com.example.rqchallenge.employees.service.RqChallengeService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,10 +12,10 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class IEmployeeControllerImpl implements IEmployeeController {
 
-    @Autowired
-    private RqChallengeService rqChallengeService;
+    private final RqChallengeService rqChallengeService;
 
     @Override
     public ResponseEntity<List<Employee>> getAllEmployees() {
