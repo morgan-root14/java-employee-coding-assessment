@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: rqChallenge
+    basePath: /
+  jackson:
+    default-property-inclusion: NON_EMPTY
+    property-naming-strategy: LOWER_CAMEL_CASE
+    serialization:
+      INDENT_OUTPUT: true
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+feign:
+  autoconfiguration:
+    jackson:
+      enabled: true
+management:
+  endpoint:
+    info:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      include:
+        - health
+        - info
+        - loggers
+    enabled-by-default: true
+client:
+  config:
+    employeeClient:
+      url: https://dummy.restapiexample.com/api/v1
+
+logging:
+  level:
+    root: INFO
+
+server:
+  port: 8080
